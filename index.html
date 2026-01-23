@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Happy Birthday</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+
+<body>
+
+  <!-- MAIN PHONE SCREEN -->
+  <div class="phone" id="mainScreen">
+    <h1>Happy Birthday <span class="name">Pragati</span></h1>
+    <p class="line">You mean more to me than words can explain 💖</p>
+
+    <div class="timer-box">
+      <div class="time"><span id="d">00</span><small>DAYS</small></div>
+      <div class="time"><span id="h">00</span><small>HRS</small></div>
+      <div class="time"><span id="m">00</span><small>MIN</small></div>
+      <div class="time"><span id="s">00</span><small>SEC</small></div>
+    </div>
+
+    <h2 class="status loading" id="statusText">Loading Surprise… 🎁</h2>
+
+    <button id="btn" disabled onclick="startPopup()">Let’s Celebrate 🎉</button>
+  </div>
+
+  <!-- POPUP -->
+  <div class="popup" id="popup">
+    <div class="popup-card">
+      <p id="popupText">✨ Do u wanna see what I made..? ✨</p>
+      <div class="popup-buttons">
+        <button class="yes-btn" onclick="nextPopup()">Yes 👍</button>
+        <button class="no-btn" onclick="closePopup()">No 👀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🎉 CELEBRATION SCREEN -->
+  <div class="celebration" id="celebrationScreen">
+    <div class="stage">
+        <!-- Night overlay + fireflies -->
+<div class="night-overlay" id="nightOverlay"></div>
+<div id="fireflyLayer"></div>
+
+<!-- Extra hanging flags/banners -->
+<div class="flags" id="flags">
+  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
+
+      <!-- Banner -->
+      <div class="banner" id="banner">
+        <span>🎈 HAPPY BIRTHDAY PRAGATI 🎈</span>
+      </div>
+
+      <!-- Cake -->
+      <div class="cake-wrap" id="cake">
+        <div class="cake3d">
+          <div class="plate"></div>
+
+          <div class="tier tier-3">
+            <div class="drip"></div>
+            <div class="sprinkles"></div>
+          </div>
+
+          <div class="tier tier-2">
+            <div class="drip"></div>
+            <div class="sprinkles"></div>
+          </div>
+
+          <div class="tier tier-1">
+            <div class="drip"></div>
+            <div class="sprinkles"></div>
+          </div>
+
+          <div class="candle">
+            <div class="wick"></div>
+            <div class="flame"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Happy text -->
+      <div class="happy" id="happyText">Happy Birthday 💖</div>
+
+      <!-- Confetti layer -->
+      <div id="confettiLayer"></div>
+
+      <!-- Envelope -->
+      <div class="envelope-wrap" id="envelopeWrap">
+        <div class="envelope2" id="envelope2">
+          <div class="env-back"></div>
+          <div class="env-front"></div>
+          <div class="env-flap"></div>
+
+          <div class="letter">
+            <h3>To Pragati 💌</h3>
+            <p>
+              You’re genuinely special to me.
+              May your day be full of smiles, sweet surprises,
+              and memories you’ll always keep ✨
+            </p>
+            <p class="sign">— From me ❤️</p>
+          </div>
+        </div>
+
+        <button class="open-btn" id="openBtn">Open Envelope ✨</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /* =========================
+       COUNTDOWN (FIXED)
+       - Use a real date/time
+       - If date has passed, auto-move to next year
+       ========================= */
+
+    // ✅ CHANGE THIS to Pragati's birthday date/time
+    // Format: "YYYY-MM-DDTHH:MM:SS"
+    let target = new Date("2026-01-24T01:48:00");
+
+    
+
+    const btn = document.getElementById("btn");
+    const statusText = document.getElementById("statusText");
+
+    function pad2(n) {
+      return String(n).padStart(2, "0");
+    }
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        statusText.innerText = "🎉 IT'S YOUR BIRTHDAY 🎉";
+        statusText.classList.remove("loading");
+        statusText.classList.add("birthday-glow");
+        btn.disabled = false;
+
+        document.getElementById("d").innerText = "00";
+        document.getElementById("h").innerText = "00";
+        document.getElementById("m").innerText = "00";
+        document.getElementById("s").innerText = "00";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hrs  = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("d").innerText = pad2(days);
+      document.getElementById("h").innerText = pad2(hrs);
+      document.getElementById("m").innerText = pad2(mins);
+      document.getElementById("s").innerText = pad2(secs);
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    /* =========================
+       POPUPS
+       ========================= */
+
+    const messages = [
+      "✨ Do u wanna see what I made..? ✨",
+      "Because it’s something special 💖"
+    ];
+    let index = 0;
+
+    function startPopup() {
+      const popup = document.getElementById("popup");
+      const popupText = document.getElementById("popupText");
+      popup.style.display = "flex";
+      index = 1;
+      popupText.innerText = messages[0];
+    }
+
+    function nextPopup() {
+      const popupText = document.getElementById("popupText");
+
+      if (index < messages.length) {
+        popupText.innerText = messages[index];
+        index++;
+        return;
+      }
+
+      // show celebration
+      document.getElementById("popup").style.display = "none";
+      document.getElementById("mainScreen").style.display = "none";
+      document.getElementById("celebrationScreen").style.display = "flex";
+      runCelebrationSequence();
+    }
+
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+
+    /* =========================
+       CELEBRATION SEQUENCE
+       ========================= */
+
+    const banner = document.getElementById("banner");
+    const happyText = document.getElementById("happyText");
+    const cake = document.getElementById("cake");
+    const envelopeWrap = document.getElementById("envelopeWrap");
+    const confettiLayer = document.getElementById("confettiLayer");
+
+    const celebrationScreen = document.getElementById("celebrationScreen");
+const flags = document.getElementById("flags");
+const nightOverlay = document.getElementById("nightOverlay");
+const fireflyLayer = document.getElementById("fireflyLayer");
+
+function runCelebrationSequence() {
+  // show flags early
+  setTimeout(() => flags && flags.classList.add("show"), 250);
+
+  setTimeout(() => banner.classList.add("show"), 350);
+  setTimeout(() => burstConfetti(140), 750);
+  setTimeout(() => cake.classList.add("show"), 1150);
+  setTimeout(() => happyText.classList.add("show"), 1550);
+  setTimeout(() => envelopeWrap.classList.add("show"), 2150);
+
+  // start night mode slowly after everything appears
+  setTimeout(() => startNightMode(), 2600);
+}
+
+/* =========================
+   NIGHT MODE + FIREFLIES
+   ========================= */
+
+let fireflyInterval = null;
+
+function startNightMode() {
+  // add night background classcelebrationScreen.cla
+  if (celebrationScreen) celebrationScreen.classList.add("night-transition");
+
+
+  // spawn initial fireflies
+  spawnFireflies(18);
+
+  // keep adding some
+  if (fireflyInterval) clearInterval(fireflyInterval);
+  fireflyInterval = setInterval(() => spawnFireflies(3), 1200);
+}
+
+function spawnFireflies(count = 10) {
+  if (!fireflyLayer) return;
+
+  for (let i = 0; i < count; i++) {
+    const f = document.createElement("div");
+    f.className = "firefly";
+
+    // random position
+    f.style.left = (Math.random() * 100) + "%";
+    f.style.top = (15 + Math.random() * 75) + "%";
+
+    // random size
+    const s = 4 + Math.random() * 6;
+    f.style.width = s + "px";
+    f.style.height = s + "px";
+
+    // random duration
+    f.style.setProperty("--dur", (6 + Math.random() * 6) + "s");
+
+    fireflyLayer.appendChild(f);
+
+    // remove after some time so DOM doesn’t grow
+    setTimeout(() => f.remove(), 12000);
+  }
+}
+
+
+    /* =========================
+       CONFETTI
+       ========================= */
+
+    function burstConfetti(count = 80) {
+      if (!confettiLayer) return;
+
+      for (let i = 0; i < count; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random() * 100 + "%";
+        c.style.top = (-10 - Math.random() * 40) + "px";
+        c.style.background = randomColor();
+        c.style.animationDuration = (2 + Math.random() * 1.8) + "s";
+        c.style.width = (6 + Math.random() * 10) + "px";
+        c.style.height = (8 + Math.random() * 16) + "px";
+
+        confettiLayer.appendChild(c);
+        c.addEventListener("animationend", () => c.remove());
+      }
+    }
+
+    function randomColor() {
+      const colors = ["#ff4d6d", "#ffd166", "#06d6a0", "#4ea8de", "#c77dff", "#ff8fab"];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    /* =========================
+       ENVELOPE OPEN (SAFE)
+       ========================= */
+
+    const envelope2 = document.getElementById("envelope2");
+    const openBtn = document.getElementById("openBtn");
+
+function toggleEnvelope(e) {
+  if (e) e.stopPropagation();
+  if (!envelope2) return;
+
+  envelope2.classList.toggle("open");
+
+  if (celebrationScreen) {
+    const isOpen = envelope2.classList.contains("open");
+    celebrationScreen.classList.toggle("dim", isOpen);
+  }
+
+  if (envelope2.classList.contains("open")) burstConfetti(70);
+}
+
+if (openBtn) openBtn.addEventListener("click", toggleEnvelope);
+if (envelope2) envelope2.addEventListener("click", toggleEnvelope);
+
+  </script>
+
+</body>
+</html>
