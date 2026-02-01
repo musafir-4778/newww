@@ -7,13 +7,20 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <link rel="stylesheet" href="./style.css">
 
+  <!-- ✅ Preload audio early to reduce buffering -->
+  <link rel="preload" as="audio" href="./happy-birthday-471211.mp3" type="audio/mpeg">
 </head>
 
 <body>
 
+  <!-- ✅ Background music (must be served from same site/path) -->
+  <audio id="bgMusic" preload="auto" loop playsinline>
+    <source src="./happy-birthday-471211.mp3" type="audio/mpeg" />
+  </audio>
+
   <!-- MAIN PHONE SCREEN -->
   <div class="phone" id="mainScreen">
-    <h1>Happy Birthday <span class="name">Pragati</span></h1>
+    <h1>Happy Birthday <span class="name">Pargarti</span></h1>
     <p class="line">You mean more to me than words can explain 💖</p>
 
     <div class="timer-box">
@@ -42,20 +49,19 @@
   <!-- 🎉 CELEBRATION SCREEN -->
   <div class="celebration" id="celebrationScreen">
     <div class="stage">
-        <!-- Night overlay + fireflies -->
-<div class="night-overlay" id="nightOverlay"></div>
-<div id="fireflyLayer"></div>
+      <!-- Night overlay + fireflies -->
+      <div class="night-overlay" id="nightOverlay"></div>
+      <div id="fireflyLayer"></div>
 
-<!-- Extra hanging flags/banners -->
-<div class="flags" id="flags">
-  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-  <span></span><span></span><span></span><span></span><span></span><span></span>
-</div>
-
+      <!-- Extra hanging flags/banners -->
+      <div class="flags" id="flags">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
 
       <!-- Banner -->
       <div class="banner" id="banner">
-        <span>🎈 HAPPY BIRTHDAY PRAGATI 🎈</span>
+        <span>🎈 HAPPY BIRTHDAY PARGARTI 🎈</span>
       </div>
 
       <!-- Cake -->
@@ -99,7 +105,7 @@
           <div class="env-flap"></div>
 
           <div class="letter">
-            <h3>To Pragati 💌</h3>
+            <h3>To Pargarti 💌</h3>
             <p>
               You’re genuinely special to me.
               May your day be full of smiles, sweet surprises,
@@ -118,15 +124,8 @@
   <script>
     /* =========================
        COUNTDOWN (FIXED)
-       - Use a real date/time
-       - If date has passed, auto-move to next year
        ========================= */
-
-    // ✅ CHANGE THIS to Pragati's birthday date/time
-    // Format: "YYYY-MM-DDTHH:MM:SS"
-    let target = new Date("2026-01-24T01:48:00");
-
-    
+    let target = new Date("2026-02-2T01:48:00");
 
     const btn = document.getElementById("btn");
     const statusText = document.getElementById("statusText");
@@ -167,9 +166,41 @@
     setInterval(updateCountdown, 1000);
 
     /* =========================
+       ✅ BACKGROUND MUSIC (mobile-safe)
+       - starts on "Yes" click (user gesture)
+       - fade-in so it feels smooth
+       ========================= */
+    const bgMusic = document.getElementById("bgMusic");
+    let musicStarted = false;
+
+    function playMusic() {
+      if (!bgMusic || musicStarted) return;
+      musicStarted = true;
+
+      bgMusic.volume = 0; // start silent for fade in
+      const p = bgMusic.play();
+
+      // if blocked, allow another click later
+      if (p && typeof p.catch === "function") {
+        p.catch(() => { musicStarted = false; });
+      }
+
+      // fade in
+      let v = 0;
+      const fade = setInterval(() => {
+        v += 0.05;
+        if (v >= 0.6) {
+          bgMusic.volume = 0.6;
+          clearInterval(fade);
+        } else {
+          bgMusic.volume = v;
+        }
+      }, 120);
+    }
+
+    /* =========================
        POPUPS
        ========================= */
-
     const messages = [
       "✨ Do u wanna see what I made..? ✨",
       "Because it’s something special 💖"
@@ -193,10 +224,14 @@
         return;
       }
 
-      // show celebration
+      // ✅ show celebration
       document.getElementById("popup").style.display = "none";
       document.getElementById("mainScreen").style.display = "none";
       document.getElementById("celebrationScreen").style.display = "flex";
+
+      // ✅ start music right now (this click is the user gesture)
+      playMusic();
+
       runCelebrationSequence();
     }
 
@@ -207,7 +242,6 @@
     /* =========================
        CELEBRATION SEQUENCE
        ========================= */
-
     const banner = document.getElementById("banner");
     const happyText = document.getElementById("happyText");
     const cake = document.getElementById("cake");
@@ -215,74 +249,60 @@
     const confettiLayer = document.getElementById("confettiLayer");
 
     const celebrationScreen = document.getElementById("celebrationScreen");
-const flags = document.getElementById("flags");
-const nightOverlay = document.getElementById("nightOverlay");
-const fireflyLayer = document.getElementById("fireflyLayer");
+    const flags = document.getElementById("flags");
+    const nightOverlay = document.getElementById("nightOverlay");
+    const fireflyLayer = document.getElementById("fireflyLayer");
 
-function runCelebrationSequence() {
-  // show flags early
-  setTimeout(() => flags && flags.classList.add("show"), 250);
+    function runCelebrationSequence() {
+      setTimeout(() => flags && flags.classList.add("show"), 250);
 
-  setTimeout(() => banner.classList.add("show"), 350);
-  setTimeout(() => burstConfetti(140), 750);
-  setTimeout(() => cake.classList.add("show"), 1150);
-  setTimeout(() => happyText.classList.add("show"), 1550);
-  setTimeout(() => envelopeWrap.classList.add("show"), 2150);
+      setTimeout(() => banner.classList.add("show"), 350);
+      setTimeout(() => burstConfetti(140), 750);
+      setTimeout(() => cake.classList.add("show"), 1150);
+      setTimeout(() => happyText.classList.add("show"), 1550);
+      setTimeout(() => envelopeWrap.classList.add("show"), 2150);
 
-  // start night mode slowly after everything appears
-  setTimeout(() => startNightMode(), 2600);
-}
+      setTimeout(() => startNightMode(), 2600);
+    }
 
-/* =========================
-   NIGHT MODE + FIREFLIES
-   ========================= */
+    /* =========================
+       NIGHT MODE + FIREFLIES
+       ========================= */
+    let fireflyInterval = null;
 
-let fireflyInterval = null;
+    function startNightMode() {
+      if (celebrationScreen) celebrationScreen.classList.add("night-transition");
 
-function startNightMode() {
-  // add night background classcelebrationScreen.cla
-  if (celebrationScreen) celebrationScreen.classList.add("night-transition");
+      spawnFireflies(18);
 
+      if (fireflyInterval) clearInterval(fireflyInterval);
+      fireflyInterval = setInterval(() => spawnFireflies(3), 1200);
+    }
 
-  // spawn initial fireflies
-  spawnFireflies(18);
+    function spawnFireflies(count = 10) {
+      if (!fireflyLayer) return;
 
-  // keep adding some
-  if (fireflyInterval) clearInterval(fireflyInterval);
-  fireflyInterval = setInterval(() => spawnFireflies(3), 1200);
-}
+      for (let i = 0; i < count; i++) {
+        const f = document.createElement("div");
+        f.className = "firefly";
 
-function spawnFireflies(count = 10) {
-  if (!fireflyLayer) return;
+        f.style.left = (Math.random() * 100) + "%";
+        f.style.top = (15 + Math.random() * 75) + "%";
 
-  for (let i = 0; i < count; i++) {
-    const f = document.createElement("div");
-    f.className = "firefly";
+        const s = 4 + Math.random() * 6;
+        f.style.width = s + "px";
+        f.style.height = s + "px";
 
-    // random position
-    f.style.left = (Math.random() * 100) + "%";
-    f.style.top = (15 + Math.random() * 75) + "%";
+        f.style.setProperty("--dur", (6 + Math.random() * 6) + "s");
 
-    // random size
-    const s = 4 + Math.random() * 6;
-    f.style.width = s + "px";
-    f.style.height = s + "px";
-
-    // random duration
-    f.style.setProperty("--dur", (6 + Math.random() * 6) + "s");
-
-    fireflyLayer.appendChild(f);
-
-    // remove after some time so DOM doesn’t grow
-    setTimeout(() => f.remove(), 12000);
-  }
-}
-
+        fireflyLayer.appendChild(f);
+        setTimeout(() => f.remove(), 12000);
+      }
+    }
 
     /* =========================
        CONFETTI
        ========================= */
-
     function burstConfetti(count = 80) {
       if (!confettiLayer) return;
 
@@ -309,27 +329,25 @@ function spawnFireflies(count = 10) {
     /* =========================
        ENVELOPE OPEN (SAFE)
        ========================= */
-
     const envelope2 = document.getElementById("envelope2");
     const openBtn = document.getElementById("openBtn");
 
-function toggleEnvelope(e) {
-  if (e) e.stopPropagation();
-  if (!envelope2) return;
+    function toggleEnvelope(e) {
+      if (e) e.stopPropagation();
+      if (!envelope2) return;
 
-  envelope2.classList.toggle("open");
+      envelope2.classList.toggle("open");
 
-  if (celebrationScreen) {
-    const isOpen = envelope2.classList.contains("open");
-    celebrationScreen.classList.toggle("dim", isOpen);
-  }
+      if (celebrationScreen) {
+        const isOpen = envelope2.classList.contains("open");
+        celebrationScreen.classList.toggle("dim", isOpen);
+      }
 
-  if (envelope2.classList.contains("open")) burstConfetti(70);
-}
+      if (envelope2.classList.contains("open")) burstConfetti(70);
+    }
 
-if (openBtn) openBtn.addEventListener("click", toggleEnvelope);
-if (envelope2) envelope2.addEventListener("click", toggleEnvelope);
-
+    if (openBtn) openBtn.addEventListener("click", toggleEnvelope);
+    if (envelope2) envelope2.addEventListener("click", toggleEnvelope);
   </script>
 
 </body>
