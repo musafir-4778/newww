@@ -8,14 +8,14 @@
   <link rel="stylesheet" href="./style.css">
 
   <!-- ✅ Preload audio early to reduce buffering -->
-  <link rel="preload" as="audio" href="./happy-birthday-471211.mp3" type="audio/mpeg">
+  <link rel="preload" as="audio" href="./1.mp3" type="audio/mpeg">
 </head>
 
 <body>
 
   <!-- ✅ Background music (must be served from same site/path) -->
   <audio id="bgMusic" preload="auto" loop playsinline>
-    <source src="./happy-birthday-471211.mp3" type="audio/mpeg" />
+    <source src="./1.mp3" type="audio/mpeg" />
   </audio>
 
   <!-- MAIN PHONE SCREEN -->
@@ -107,9 +107,13 @@
           <div class="letter">
             <h3>To Pargarti 💌</h3>
             <p>
-              You’re genuinely special to me.
-              May your day be full of smiles, sweet surprises,
-              and memories you’ll always keep ✨
+              Happy Birthday! 🎉
+               Hope your day is full of cake, laughter, 
+               and people who make you smile… 
+               especially me sneaking into that list.
+              You officially get older today, 
+              but somehow you’re still getting cuter 
+              please explain that magic sometime ✨
             </p>
             <p class="sign">— From me ❤️</p>
           </div>
@@ -125,7 +129,7 @@
     /* =========================
        COUNTDOWN (FIXED)
        ========================= */
-    let target = new Date("2026-02-02T02:48:00");
+    let target = new Date("2026-02-02T00:00:00");
 
     const btn = document.getElementById("btn");
     const statusText = document.getElementById("statusText");
